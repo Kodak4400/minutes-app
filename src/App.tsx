@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { invoke } from "@tauri-apps/api/core";
 // export const meta: MetaFunction = () => {
 //   return [
 //     { title: "Video Upload System" },
@@ -91,9 +91,34 @@ function App() {
     }).format(date);
   };
 
+  const [greetMsg, setGreetMsg] = useState("");
+  const [name, setName] = useState("");
+  async function greet() {
+    // setGreetMsg(await invoke("greet", { name }));
+    setGreetMsg(await invoke("list_objects"));
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-4xl mx-auto space-y-8">
+        <div className="bg-black rounded-lg shadow">
+          <p>Hello</p>
+          <form
+            className="row"
+            onSubmit={(e) => {
+              e.preventDefault();
+              greet();
+            }}
+          >
+            <input
+              id="greet-input"
+              onChange={(e) => setName(e.currentTarget.value)}
+              placeholder="Enter a name..."
+            />
+            <button type="submit">Greet</button>
+          </form>
+        </div>
+        <p>{greetMsg}</p>
         {/* Upload Area */}
         <div
           onDragOver={handleDragOver}
